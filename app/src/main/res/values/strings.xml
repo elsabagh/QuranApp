@@ -31,4 +31,15 @@
     <string name="tasbih">Tasbih</string>
     <string name="qiblah">Qiblah</string>
 
+    <string name="generic_error">Something wrong happened. Please try again.</string>
+    <string name="download_failed">Download failed</string>
+    <string name="no_surah_available">No surah available</string>
+    <string name="no_internet_connection">No Internet Connection</string>
+    <string name="small_font">Small Font</string>
+    <string name="medium_font">Medium Font</string>
+    <string name="large_font">Large Font</string>
+    <string name="surah_downloaded_successfully">Surah downloaded successfully</string>
+    <string name="check_your_internet_connection">Check your internet connection</string>
+
+
 </resources>

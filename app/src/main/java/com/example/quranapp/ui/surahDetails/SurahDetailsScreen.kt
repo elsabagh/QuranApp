@@ -28,12 +28,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.quranapp.R
 import com.example.quranapp.ui.surahDetails.component.AyahCard
 import com.example.quranapp.ui.surahDetails.component.NavigationControls
 import com.example.quranapp.ui.theme.TypographyCustom
+import com.example.quranapp.util.snackbar.SnackBarManager
 
 @Composable
 fun SurahDetailsScreen(
@@ -113,21 +116,21 @@ fun SurahTopBar(
                 onDismissRequest = { expanded = false }
             ) {
                 DropdownMenuItem(
-                    text = { Text("Small Font") },
+                    text = { Text(stringResource(R.string.small_font)) },
                     onClick = {
                         onFontSizeChange(TypographyCustom.bodySmall)
                         expanded = false
                     }
                 )
                 DropdownMenuItem(
-                    text = { Text("Medium Font") },
+                    text = { Text(stringResource(R.string.medium_font)) },
                     onClick = {
                         onFontSizeChange(TypographyCustom.bodyMedium)
                         expanded = false
                     }
                 )
                 DropdownMenuItem(
-                    text = { Text("Large Font") },
+                    text = { Text(stringResource(R.string.large_font)) },
                     onClick = {
                         onFontSizeChange(TypographyCustom.bodyLarge)
                         expanded = false
@@ -186,4 +189,6 @@ fun ErrorScreen(error: String) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(text = error, color = Color.Red)
     }
+    SnackBarManager.showMessage(R.string.no_internet_connection)
+
 }

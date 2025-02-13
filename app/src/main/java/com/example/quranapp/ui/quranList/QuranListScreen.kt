@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,8 +25,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.quranapp.R
 import com.example.quranapp.ui.quranList.component.QuranFilterBar
 import com.example.quranapp.ui.quranList.component.SurahItem
+import com.example.quranapp.util.snackbar.SnackBarManager
 
 @Composable
 fun QuranListScreen(
@@ -41,79 +44,97 @@ fun QuranListScreen(
         viewModel.checkDownloadedSurahs()
     }
 
-    when {
-        state.isLoading -> {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
-        }
-
-        state.error.isNotEmpty() -> {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(text = state.error, color = Color.Red)
-            }
-        }
-
-        else -> {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = 46.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 46.dp)
+    ) {
+        // Back Button
+        Row(modifier = Modifier.fillMaxWidth()) {
+            IconButton(
+                onClick = {
+                    onBackClick()
+                    viewModel.checkDownloadedSurahs() // Refresh when leaving
+                }
             ) {
-                // Back Button
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    IconButton(
-                        onClick = {
-                            onBackClick()
-                            viewModel.checkDownloadedSurahs() // Refresh when leaving
+                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+            }
+        }
+
+
+        // Filter Bar
+        QuranFilterBar(selectedFilter = selectedFilter, onFilterSelected = viewModel::setFilter)
+
+        when {
+            state.isLoading -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            }
+
+            state.error.isNotEmpty() -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(text = state.error)
+                }
+            }
+
+            else -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+
+                    // Filtered Surah List
+                    val filteredSurahs = when (selectedFilter) {
+                        QuranFilterType.ALL -> state.surahList
+                        QuranFilterType.DOWNLOAD -> state.surahList.filter {
+                            state.downloadedSurahNumbers.contains(it.number)
                         }
-                    ) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                    }
-                }
 
-                // Filter Bar
-                QuranFilterBar(selectedFilter = selectedFilter, onFilterSelected = viewModel::setFilter)
-
-                // Filtered Surah List
-                val filteredSurahs = when (selectedFilter) {
-                    QuranFilterType.ALL -> state.surahList
-                    QuranFilterType.DOWNLOAD -> state.surahList.filter {
-                        state.downloadedSurahNumbers.contains(it.number)
                     }
 
-//                    QuranFilterType.BOOKMARK -> TODO()
-                }
+                    if (filteredSurahs.isEmpty()) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Text(
+                                    text = "No Internet. Please check your connection.",
+                                    color = Color.Gray
+                                )
+                                Button(onClick = { viewModel.reload() }) {
+                                    Text("Retry")
+                                }
+                            }
+                        }
 
-                if (filteredSurahs.isEmpty()) {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(
-                            text = "No surahs available.",
-                            color = Color.Gray
-                        )
-                    }
-                } else {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(vertical = 8.dp, horizontal = 4.dp)
-                    ) {
-                        items(filteredSurahs.size) { index ->
-                            val surah = filteredSurahs[index]
-                            SurahItem(
-                                surah = surah,
-                                onClick = {
-                                    navController.navigate("surahDetails/${surah.number}/${surah.name}")
-                                },
-                                onDownloadClick = {
-                                    viewModel.downloadSurah(surah.number)
-                                },
-                                isDownloading = state.downloadingSurahNumber == surah.number,
-                                isDownloaded = state.downloadedSurahNumbers.contains(surah.number)
-                            )
+                        SnackBarManager.showMessage(R.string.check_your_internet_connection)
+
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(vertical = 8.dp, horizontal = 4.dp)
+                        ) {
+                            items(filteredSurahs.size) { index ->
+                                val surah = filteredSurahs[index]
+                                SurahItem(
+                                    surah = surah,
+                                    onClick = {
+                                        navController.navigate("surahDetails/${surah.number}/${surah.name}")
+                                    },
+                                    onDownloadClick = {
+                                        viewModel.downloadSurah(surah.number)
+                                    },
+                                    isDownloading = state.downloadingSurahNumber == surah.number,
+                                    isDownloaded = state.downloadedSurahNumbers.contains(surah.number)
+                                )
+                            }
                         }
                     }
                 }
             }
         }
     }
+
 }

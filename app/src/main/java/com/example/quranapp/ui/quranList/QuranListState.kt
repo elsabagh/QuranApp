@@ -7,6 +7,7 @@ data class QuranListState(
     val error: String = "",
     val surahList: List<Surah> = emptyList(),
     val downloadingSurahNumber: Int? = null, // Track the surah number being downloaded
-    val downloadedSurahNumbers: List<Int> = emptyList() // List of downloaded Surah numbers
-
+    val downloadedSurahNumbers: List<Int> = emptyList(), // List of downloaded Surah numbers
+    val lastFetchedSurahList: List<Surah> = emptyList(), // Store last fetched list
+    val showRetryButton: Boolean = false
 )

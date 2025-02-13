@@ -3,9 +3,11 @@ package com.example.quranapp.ui.quranList
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.quranapp.R
 import com.example.quranapp.domain.repository.QuranRepository
 import com.example.quranapp.util.NetworkUtils
 import com.example.quranapp.util.Resource
+import com.example.quranapp.util.snackbar.SnackBarManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -42,15 +44,29 @@ class QuranListViewModel @Inject constructor(
     fun getSurahList() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
+
             quranRepository.getSurahList().collect { resource ->
                 when (resource) {
-                    is Resource.Error -> _state.update {
-                        it.copy(isLoading = false, error = resource.message ?: "Unknown error")
+                    is Resource.Error -> {
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                error = resource.message ?: "Unknown error",
+                                showRetryButton = true // Show retry when error occurs
+                            )
+                        }
                     }
 
                     is Resource.Success -> resource.data?.let { surahList ->
                         val updatedSurahList = surahList.map { it.copy(ayahs = it.ayahs ?: emptyList()) }
-                        _state.update { it.copy(isLoading = false, surahList = updatedSurahList) }
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                surahList = updatedSurahList,
+                                lastFetchedSurahList = updatedSurahList, // Save last fetched list
+                                showRetryButton = false
+                            )
+                        }
                     }
 
                     is Resource.Loading -> _state.update { it.copy(isLoading = resource.isLoading) }
@@ -58,6 +74,15 @@ class QuranListViewModel @Inject constructor(
             }
         }
     }
+
+    fun reload() {
+        if (NetworkUtils.isNetworkAvailable(context)) {
+            getSurahList()
+        } else {
+            SnackBarManager.showMessage(R.string.no_internet_connection)
+        }
+    }
+
 
     private fun getDownloadedSurahs() {
         viewModelScope.launch {
@@ -74,8 +99,11 @@ class QuranListViewModel @Inject constructor(
                 quranRepository.downloadSurah(surahNumber)
                 checkDownloadedSurahs() // Refresh the list after downloading
                 _state.update { it.copy(downloadingSurahNumber = null) }
+                SnackBarManager.showMessage(R.string.surah_downloaded_successfully)
             } catch (e: Exception) {
                 _state.update { it.copy(error = "Download failed: ${e.message}") }
+                SnackBarManager.showMessage(R.string.download_failed)
+
             }
         }
     }

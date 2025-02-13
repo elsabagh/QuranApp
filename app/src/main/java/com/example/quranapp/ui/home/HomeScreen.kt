@@ -31,13 +31,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.example.auth_firebase.presentation.navigation.AppDestination
 import com.example.quranapp.R
 import com.example.quranapp.data.model.PrayerTimesResponse
 import com.example.quranapp.ui.home.component.ActionRow
 import com.example.quranapp.ui.home.component.DialogLocation
 import com.example.quranapp.ui.home.component.DuaCard
 import com.example.quranapp.ui.home.component.PrayerTimesCard
+import com.example.quranapp.ui.navigation.AppDestination
 import com.example.quranapp.ui.theme.TypographyCustom
 import com.example.quranapp.util.Resource
 import com.example.quranapp.util.updateLocation

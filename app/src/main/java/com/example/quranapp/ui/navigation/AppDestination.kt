@@ -1,4 +1,4 @@
-package com.example.auth_firebase.presentation.navigation
+package com.example.quranapp.ui.navigation
 
 interface AppDestination {
     val route: String
