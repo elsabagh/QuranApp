@@ -9,7 +9,7 @@ import androidx.room.Query
 interface QuranDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertSurah(surah: SurahEntity)
+    suspend fun insertSurah(surah: List<SurahEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAyahs(ayahs: List<AyahEntity>)

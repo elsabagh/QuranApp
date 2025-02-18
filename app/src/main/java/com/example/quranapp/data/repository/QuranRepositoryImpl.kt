@@ -5,9 +5,9 @@ import com.example.quranapp.data.api.QuranApiService
 import com.example.quranapp.data.local.AyahEntity
 import com.example.quranapp.data.local.QuranDao
 import com.example.quranapp.data.local.SurahEntity
+import com.example.quranapp.data.local.toDomainModel
 import com.example.quranapp.data.model.Ayah
 import com.example.quranapp.data.model.Surah
-import com.example.quranapp.data.model.toDomainModel
 import com.example.quranapp.domain.repository.QuranRepository
 import com.example.quranapp.util.Resource
 import kotlinx.coroutines.flow.Flow
@@ -17,18 +17,18 @@ import javax.inject.Inject
 class QuranRepositoryImpl @Inject constructor(
     private val api: QuranApiService,
     private val surahDao: QuranDao
-
 ) : QuranRepository {
 
-    // Fetch the Surah list from the API
     override suspend fun getSurahList(): Flow<Resource<List<Surah>>> {
         return flow {
             emit(Resource.Loading(true))
+
             try {
                 val response = api.getSurahList()
                 emit(Resource.Success(response.data))
                 Log.d("QuranRepository", "Response: $response")
             } catch (e: Exception) {
+                Log.e("QuranRepository", "Error fetching surahs: ${e.message}")
                 emit(Resource.Error(e.message ?: "Unknown error"))
             } finally {
                 emit(Resource.Loading(false))
@@ -41,22 +41,15 @@ class QuranRepositoryImpl @Inject constructor(
             emit(Resource.Loading(true))
 
             try {
-                // Check if Ayahs exist in the local database
                 val localAyahs = surahDao.getAyahs(surahNumber)
 
                 if (!localAyahs.isNullOrEmpty()) {
-                    // If available locally, return them
-                    val ayahs = localAyahs.map { it.toDomainModel() }
-                    emit(Resource.Success(ayahs))
+                    emit(Resource.Success(localAyahs.map { it.toDomainModel() }))
                 } else {
-                    // Otherwise, fetch from API
                     val response = api.getSurahAyahs(surahNumber)
 
-                    if (response.data != null) {
-                        val ayahs = response.data.ayahs
-
-                        // Save to local database
-                        val ayahEntities = ayahs.map { ayah ->
+                    response.data?.let {
+                        val ayahEntities = it.ayahs.map { ayah ->
                             AyahEntity(
                                 id = ayah.number,
                                 surahNumber = surahNumber,
@@ -66,14 +59,13 @@ class QuranRepositoryImpl @Inject constructor(
                                 manzil = ayah.manzil
                             )
                         }
-                        surahDao.insertAyahs(ayahEntities)
 
-                        emit(Resource.Success(ayahs))
-                    } else {
-                        emit(Resource.Error("No data available"))
-                    }
+                        surahDao.insertAyahs(ayahEntities)
+                        emit(Resource.Success(it.ayahs))
+                    } ?: emit(Resource.Error("No data available"))
                 }
             } catch (e: Exception) {
+                Log.e("QuranRepository", "Error fetching ayahs: ${e.message}")
                 emit(Resource.Error("Failed to fetch data: ${e.message}"))
             } finally {
                 emit(Resource.Loading(false))
@@ -81,26 +73,21 @@ class QuranRepositoryImpl @Inject constructor(
         }
     }
 
-
-    // In QuranRepositoryImpl
     override suspend fun downloadSurah(surahNumber: Int) {
         try {
-            // Fetch Surah list
             val response = api.getSurahList()
             val surah = response.data.find { it.number == surahNumber }
 
-            if (surah != null) {
-                // Save Surah entity
+            surah?.let {
                 val surahEntity = SurahEntity(
-                    surahNumber = surah.number,
-                    name = surah.name,
-                    numberOfAyahs = surah.numberOfAyahs,
-                    revelationPlace = surah.revelationType
+                    surahNumber = it.number,
+                    name = it.name,
+                    numberOfAyahs = it.numberOfAyahs,
+                    revelationPlace = it.revelationType
                 )
-                surahDao.insertSurah(surahEntity)
+                surahDao.insertSurah(listOf(surahEntity)) // ✅ تحويل الكائن إلى قائمة
 
-                // Fetch and save Ayahs
-                val ayahResponse = api.getSurahAyahs(surahNumber) // Fetching Ayahs for the Surah
+                val ayahResponse = api.getSurahAyahs(surahNumber)
                 val ayahs = ayahResponse.data?.ayahs?.map { ayah ->
                     AyahEntity(
                         id = ayah.number,
@@ -112,22 +99,21 @@ class QuranRepositoryImpl @Inject constructor(
                     )
                 } ?: emptyList()
 
-                // Insert Ayahs into the database
                 if (ayahs.isNotEmpty()) {
                     surahDao.insertAyahs(ayahs)
                 }
-            }
+            } ?: Log.e("QuranRepository", "Surah not found in API")
+
         } catch (e: Exception) {
+            Log.e("QuranRepository", "Failed to download Surah $surahNumber: ${e.message}")
             throw Exception("Failed to download Surah $surahNumber: ${e.message}")
         }
     }
 
-    // Fetch surahs from the local database
     override suspend fun getDownloadedSurahs(): Flow<List<Surah>> {
         return flow {
             val surahs = surahDao.getAllSurahs().map { it.toDomainModel() }
             emit(surahs)
         }
     }
-
 }
