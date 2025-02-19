@@ -15,4 +15,7 @@ interface AppDestination {
         override val route = "surahDetails/{surahNumber}/{surahName}"
     }
 
+    object PrayerTimesDestination : AppDestination {
+        override val route = "PrayerTimesScreen"
+    }
 }

@@ -20,6 +20,7 @@ object NetworkModule {
     private const val QURAN_BASE_URL = "https://api.alquran.cloud/v1/"
     private const val PRAYER_BASE_URL = "https://api.aladhan.com/"
 
+    // إعادة استخدام OkHttpClient مشترك
     private val interceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
@@ -28,25 +29,24 @@ object NetworkModule {
         .addInterceptor(interceptor)
         .build()
 
-    @Provides
-    @Singleton
-    @Named("QuranRetrofit")
-    fun provideQuranRetrofit(): Retrofit =
-        Retrofit.Builder()
-            .baseUrl(QURAN_BASE_URL)
+    // دالة لإعادة استخدام Retrofit في أكثر من مكان
+    private fun provideRetrofit(baseUrl: String): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
+    }
+
+    @Provides
+    @Singleton
+    @Named("QuranRetrofit")
+    fun provideQuranRetrofit(): Retrofit = provideRetrofit(QURAN_BASE_URL)
 
     @Provides
     @Singleton
     @Named("PrayerRetrofit")
-    fun providePrayerRetrofit(): Retrofit =
-        Retrofit.Builder()
-            .baseUrl(PRAYER_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(client)
-            .build()
+    fun providePrayerRetrofit(): Retrofit = provideRetrofit(PRAYER_BASE_URL)
 
     @Provides
     @Singleton

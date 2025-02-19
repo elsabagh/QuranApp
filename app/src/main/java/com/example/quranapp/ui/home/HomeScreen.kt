@@ -139,9 +139,9 @@ fun HomeContent(
                     AppDestination.QuranPageDestination.route
                 ),
                 Triple(
-                    stringResource(R.string.azkar),
+                    stringResource(R.string.prayer_times),
                     painterResource(id = R.drawable.azkar),
-                    "azkarScreen"
+                    AppDestination.PrayerTimesDestination.route
                 )
             ),
             navController = navController

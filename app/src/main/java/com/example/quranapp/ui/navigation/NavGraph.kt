@@ -8,9 +8,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.quranapp.ui.home.HomeScreen
+import com.example.quranapp.ui.navigation.AppDestination.PrayerTimesDestination
 import com.example.quranapp.ui.navigation.AppDestination.QuranHomeDestination
 import com.example.quranapp.ui.navigation.AppDestination.QuranPageDestination
 import com.example.quranapp.ui.navigation.AppDestination.SurahDetailsDestination
+import com.example.quranapp.ui.prayerTimes.PrayerTimesByDateScreen
 import com.example.quranapp.ui.quranList.QuranListScreen
 import com.example.quranapp.ui.surahDetails.SurahDetailsScreen
 
@@ -44,6 +46,13 @@ fun NavGraph(
                 surahNumber = surahNumber,
                 surahName = surahName,
                 onBackClick = { navController.navigate(QuranPageDestination.route) }
+            )
+        }
+        composable(PrayerTimesDestination.route) {
+            PrayerTimesByDateScreen(navController = navController,
+                onBackClick = {
+                    navController.navigate(QuranHomeDestination.route)
+                }
             )
         }
     }

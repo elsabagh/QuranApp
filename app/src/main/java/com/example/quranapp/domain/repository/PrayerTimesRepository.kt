@@ -10,4 +10,11 @@ interface PrayerTimesRepository {
         city: String,
         country: String
     ): Flow<Resource<PrayerTimesResponse?>>
+
+
+    fun getPrayerTimesByDate(
+        address: String, // ✅ تعديل الوسيط ليكون address بدلاً من city & country
+        date: String
+    ): Flow<Resource<PrayerTimesResponse>>
+
 }

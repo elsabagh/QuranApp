@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.quranapp.ui.surahDetails.SurahDetailsState
 import com.example.quranapp.ui.surahDetails.SurahDetailsViewModel
@@ -56,7 +55,6 @@ fun AyahCard(
                 )
                 Text(
                     text = formattedAyahs,
-                    textAlign = TextAlign.Justify,
                     style = fontStyle, // Apply the font style
                     modifier = modifier
                         .fillMaxWidth()

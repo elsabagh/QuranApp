@@ -1,23 +1,14 @@
 package com.example.quranapp.ui.surahDetails
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -28,13 +19,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.quranapp.R
 import com.example.quranapp.ui.surahDetails.component.AyahCard
 import com.example.quranapp.ui.surahDetails.component.NavigationControls
+import com.example.quranapp.ui.surahDetails.component.SurahTopBar
 import com.example.quranapp.ui.theme.TypographyCustom
 import com.example.quranapp.util.snackbar.SnackBarManager
 
@@ -86,68 +77,13 @@ fun SurahDetailsScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SurahTopBar(
-    surahName: String,
-    onBackClick: () -> Unit,
-    onFontSizeChange: (TextStyle) -> Unit
-) {
-    var expanded by remember { mutableStateOf(false) }
-
-    TopAppBar(
-        title = { Text(text = surahName, modifier = Modifier.fillMaxWidth()) },
-        navigationIcon = {
-            IconButton(onClick = onBackClick) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-            }
-        },
-        actions = {
-            IconButton(onClick = {
-                expanded = true
-            }) {
-                Icon(
-                    imageVector = Icons.Filled.MoreVert,
-                    contentDescription = "Menu"
-                )
-            }
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.small_font)) },
-                    onClick = {
-                        onFontSizeChange(TypographyCustom.bodySmall)
-                        expanded = false
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.medium_font)) },
-                    onClick = {
-                        onFontSizeChange(TypographyCustom.bodyMedium)
-                        expanded = false
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.large_font)) },
-                    onClick = {
-                        onFontSizeChange(TypographyCustom.bodyLarge)
-                        expanded = false
-                    }
-                )
-
-            }
-        }
-    )
-}
 
 @Composable
 fun SurahContent(
     state: SurahDetailsState,
     surahNumber: Int,
     viewModel: SurahDetailsViewModel,
-    scrollState: androidx.compose.foundation.ScrollState,
+    scrollState: ScrollState,
     availableHeight: Int,
     fontStyle: TextStyle,
     updateHeight: (Int) -> Unit

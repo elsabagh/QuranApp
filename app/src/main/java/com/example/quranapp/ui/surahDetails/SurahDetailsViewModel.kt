@@ -18,7 +18,7 @@ class SurahDetailsViewModel @Inject constructor(
     private var _state = MutableStateFlow(SurahDetailsState())
     val state = _state.asStateFlow()
 
-    var ayahsPerPage = 5 // Default value, will be updated dynamically
+    private var ayahsPerPage = 5 // Default value, will be updated dynamically
 
     suspend fun getSurahAyahs(surahNumber: Int) {
         quranRepository.getSurahAyahs(surahNumber).collect { resource ->
