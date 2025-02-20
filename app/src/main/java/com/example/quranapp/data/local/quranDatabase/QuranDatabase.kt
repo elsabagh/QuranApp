@@ -1,4 +1,4 @@
-package com.example.quranapp.data.local
+package com.example.quranapp.data.local.quranDatabase
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

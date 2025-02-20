@@ -1,4 +1,4 @@
-package com.example.quranapp.data.local
+package com.example.quranapp.data.local.quranDatabase
 
 import androidx.room.Dao
 import androidx.room.Insert

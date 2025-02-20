@@ -1,7 +1,5 @@
 package com.example.quranapp.util
 
-
-
 import android.util.Log
 import java.text.SimpleDateFormat
 import java.util.Calendar

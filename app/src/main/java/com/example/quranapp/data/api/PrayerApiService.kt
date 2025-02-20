@@ -17,10 +17,8 @@ interface PrayerApiService {
 
     @GET("timingsByAddress/{date}")
     suspend fun getPrayerTimesByDate(
-        @Path("date") date: String, // ✅ تحديد التاريخ في الـ Path
-        @Query("address") address: String, // ✅ إرسال العنوان بدلاً من المدينة والدولة
-        @Query("method") method: Int = 5 // ✅ اختيار طريقة الحساب
+        @Path("date") date: String,
+        @Query("address") address: String,
+        @Query("method") method: Int = 5
     ): Response<PrayerTimesResponse>
-
-
 }

@@ -2,7 +2,7 @@ package com.example.quranapp.di
 
 import com.example.quranapp.data.api.PrayerApiService
 import com.example.quranapp.data.api.QuranApiService
-import com.example.quranapp.data.local.QuranDao
+import com.example.quranapp.data.local.quranDatabase.QuranDao
 import com.example.quranapp.data.repository.PrayerTimesRepositoryImpl
 import com.example.quranapp.data.repository.QuranRepositoryImpl
 import com.example.quranapp.domain.repository.PrayerTimesRepository

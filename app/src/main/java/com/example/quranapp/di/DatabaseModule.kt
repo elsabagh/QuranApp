@@ -2,9 +2,9 @@ package com.example.quranapp.di
 
 import android.app.Application
 import androidx.room.Room
-import com.example.quranapp.data.local.AppDatabase
-import com.example.quranapp.data.local.MIGRATION_1_2
-import com.example.quranapp.data.local.QuranDao
+import com.example.quranapp.data.local.quranDatabase.AppDatabase
+import com.example.quranapp.data.local.quranDatabase.MIGRATION_1_2
+import com.example.quranapp.data.local.quranDatabase.QuranDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

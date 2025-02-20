@@ -2,10 +2,10 @@ package com.example.quranapp.data.repository
 
 import android.util.Log
 import com.example.quranapp.data.api.QuranApiService
-import com.example.quranapp.data.local.AyahEntity
-import com.example.quranapp.data.local.QuranDao
-import com.example.quranapp.data.local.SurahEntity
-import com.example.quranapp.data.local.toDomainModel
+import com.example.quranapp.data.local.quranDatabase.AyahEntity
+import com.example.quranapp.data.local.quranDatabase.QuranDao
+import com.example.quranapp.data.local.quranDatabase.SurahEntity
+import com.example.quranapp.data.local.quranDatabase.toDomainModel
 import com.example.quranapp.data.model.Ayah
 import com.example.quranapp.data.model.Surah
 import com.example.quranapp.domain.repository.QuranRepository

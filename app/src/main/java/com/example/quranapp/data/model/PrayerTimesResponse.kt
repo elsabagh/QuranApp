@@ -38,11 +38,6 @@ data class DateData(
     @SerializedName("hijri") val hijri: HijriDate
 )
 
-//data class GregorianDate(
-//    @SerializedName("date") val fullDate: String, // ✅ تاريخ جريجوري كامل مثل "2025-02-19"
-//    @SerializedName("weekday") val weekday: Weekday
-//)
-
 data class HijriDate(
     @SerializedName("date") val fullDate: String, // ✅ تاريخ هجري كامل مثل "1446-08-09"
     @SerializedName("weekday") val weekday: Weekday

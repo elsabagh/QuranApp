@@ -14,16 +14,20 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.quranapp.ui.prayerTimes.component.AddressPicker
 import com.example.quranapp.ui.prayerTimes.component.PrayerNavigationControls
 import com.example.quranapp.ui.prayerTimes.component.PrayerTimesList
 import com.example.quranapp.ui.prayerTimes.component.PrayerTopBar
 import com.example.quranapp.util.FormatDate
+import com.google.android.gms.location.LocationServices
 
 @Composable
 fun PrayerTimesByDateScreen(
@@ -32,13 +36,32 @@ fun PrayerTimesByDateScreen(
 ) {
     val viewModel: PrayerTimesByDateViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
+    val selectedAddress by viewModel.selectedAddress.collectAsState()
 
     var selectedDate by remember { mutableStateOf(FormatDate.getTodayDate()) }
-    val address = "Cairo, Egypt"
+    var city by remember { mutableStateOf(selectedAddress.substringBefore(",")) }
+    var country by remember { mutableStateOf(selectedAddress.substringAfter(", ")) }
+    val context = LocalContext.current
 
-    LaunchedEffect(selectedDate) {
-        viewModel.fetchPrayerTimes(address, selectedDate)
+    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
+    val updatedAddress by rememberUpdatedState(selectedAddress)
+
+    // تحديث الموقع تلقائياً عند فتح الصفحة
+    LaunchedEffect(Unit) {
+        viewModel.fetchLocationAutomatically(fusedLocationClient, context)
     }
+
+    // تحديث القيم عند تغير العنوان المختار
+    LaunchedEffect(updatedAddress) {
+        city = updatedAddress.substringBefore(",")
+        country = updatedAddress.substringAfter(", ")
+    }
+
+    LaunchedEffect(selectedDate, city, country) {
+        val newAddress = "$city, $country"
+        viewModel.fetchPrayerTimes(newAddress, selectedDate)
+    }
+
     Scaffold(
         topBar = {
             PrayerTopBar(
@@ -49,9 +72,23 @@ fun PrayerTimesByDateScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(horizontal = 16.dp)
                 .padding(paddingValues)
         ) {
+            AddressPicker(
+                selectedCity = city,
+                selectedCountry = country,
+                onCitySelected = { newCity ->
+                    city = newCity
+                    viewModel.updateAddress("$newCity, $country")
+                },
+                onCountrySelected = { newCountry ->
+                    country = newCountry
+                    viewModel.updateAddress("$city, $newCountry")
+                }
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             PrayerNavigationControls(
                 onNextClick = { selectedDate = FormatDate.getNextDate(selectedDate) },
@@ -59,7 +96,7 @@ fun PrayerTimesByDateScreen(
                 selectedDate = selectedDate,
                 onDateSelected = { date ->
                     selectedDate = date
-                } // تحديث التاريخ عند اختياره من الـ DatePicker
+                }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -75,6 +112,3 @@ fun PrayerTimesByDateScreen(
         }
     }
 }
-
-
-
