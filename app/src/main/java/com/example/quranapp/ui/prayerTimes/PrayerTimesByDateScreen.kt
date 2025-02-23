@@ -57,6 +57,7 @@ fun PrayerTimesByDateScreen(
         country = updatedAddress.substringAfter(", ")
     }
 
+    // تحديث الأوقات عند تغير التاريخ أو الموقع
     LaunchedEffect(selectedDate, city, country) {
         val newAddress = "$city, $country"
         viewModel.fetchPrayerTimes(newAddress, selectedDate)

@@ -26,14 +26,14 @@ val TypographyCustom = Typography(
     bodyMedium = TextStyle(
         fontFamily = kitabFont,
         fontSize = 24.sp,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.SemiBold,
         textAlign = TextAlign.Justify,
         textDirection = TextDirection.Rtl
     ),
     bodySmall = TextStyle(
         fontFamily = kitabFont,
         fontSize = 16.sp,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.Medium,
         textAlign = TextAlign.Justify,
         textDirection = TextDirection.Rtl
     )

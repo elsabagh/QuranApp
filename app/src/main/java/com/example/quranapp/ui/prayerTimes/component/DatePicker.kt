@@ -20,7 +20,7 @@ fun DatePicker(
     val datePickerDialog = DatePickerDialog(
         context,
         { _, year, month, dayOfMonth ->
-            val formattedDate = String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth)
+            val formattedDate = "$year-${month + 1}-$dayOfMonth"
             onDateSelected(formattedDate)
         },
         calendar.get(Calendar.YEAR),

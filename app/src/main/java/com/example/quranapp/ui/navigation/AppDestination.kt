@@ -18,4 +18,8 @@ interface AppDestination {
     object PrayerTimesDestination : AppDestination {
         override val route = "PrayerTimesScreen"
     }
+    object MasbahaDestination : AppDestination {
+        override val route = "MasbahaScreen"
+    }
+
 }

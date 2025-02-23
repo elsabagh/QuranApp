@@ -9,8 +9,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
+import com.example.quranapp.ui.common.BottomNavBar
+import com.example.quranapp.ui.navigation.AppDestination
 import com.example.quranapp.ui.navigation.NavGraph
 import com.example.quranapp.ui.theme.QuranAppTheme
 
@@ -22,6 +30,16 @@ fun ContainerApp(
 ) {
 
     val appState = rememberAppState()
+    val navController = rememberNavController()
+    // ✅ متغير لتتبع المسار الحالي
+    var currentRoute by rememberSaveable { mutableStateOf<String?>(null) }
+
+    // ✅ تحديث المسار عند تغييره
+    LaunchedEffect(navController) {
+        navController.currentBackStackEntryFlow.collect { backStackEntry ->
+            currentRoute = backStackEntry.destination.route
+        }
+    }
 
     QuranAppTheme {
         Scaffold(
@@ -33,9 +51,21 @@ fun ContainerApp(
                         Snackbar(snackBarData, contentColor = MaterialTheme.colorScheme.onPrimary)
                     }
                 )
+            },
+            bottomBar = {
+                val mainScreens = listOf(
+                    AppDestination.QuranHomeDestination.route,
+                    AppDestination.QuranPageDestination.route,
+                    AppDestination.PrayerTimesDestination.route
+                )
+
+                if (currentRoute in mainScreens) {
+                    BottomNavBar(bottomNavController = navController)
+                }
             }
         ) { innerPadding ->
             NavGraph(
+                navController = navController,
                 modifier = modifier.padding(innerPadding)
             )
         }

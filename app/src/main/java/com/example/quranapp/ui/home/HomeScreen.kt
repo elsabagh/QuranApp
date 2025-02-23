@@ -126,7 +126,8 @@ fun HomeContent(
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp)
+            .padding(bottom = 106.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         PrayerTimesCard(location, prayerTimes)
@@ -152,7 +153,7 @@ fun HomeContent(
                 Triple(
                     stringResource(R.string.tasbih),
                     painterResource(id = R.drawable.tasbih),
-                    "tasbihScreen"
+                    AppDestination.MasbahaDestination.route
                 ),
                 Triple(
                     stringResource(R.string.qiblah),

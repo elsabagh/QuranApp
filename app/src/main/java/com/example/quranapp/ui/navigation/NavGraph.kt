@@ -4,10 +4,12 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.example.quranapp.ui.home.HomeScreen
+import com.example.quranapp.ui.masbaha.MasbahaScreen
+import com.example.quranapp.ui.navigation.AppDestination.MasbahaDestination
 import com.example.quranapp.ui.navigation.AppDestination.PrayerTimesDestination
 import com.example.quranapp.ui.navigation.AppDestination.QuranHomeDestination
 import com.example.quranapp.ui.navigation.AppDestination.QuranPageDestination
@@ -19,9 +21,9 @@ import com.example.quranapp.ui.surahDetails.SurahDetailsScreen
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavGraph(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavHostController
 ) {
-    val navController = rememberNavController()
     NavHost(
         navController = navController,
         startDestination = QuranHomeDestination.route
@@ -49,11 +51,21 @@ fun NavGraph(
             )
         }
         composable(PrayerTimesDestination.route) {
-            PrayerTimesByDateScreen(navController = navController,
+            PrayerTimesByDateScreen(
+                navController = navController,
                 onBackClick = {
                     navController.navigate(QuranHomeDestination.route)
                 }
             )
+        }
+        composable(MasbahaDestination.route) {
+            MasbahaScreen(
+                navController = navController,
+                onBackClick = {
+                    navController.navigate(QuranHomeDestination.route)
+                }
+            )
+
         }
     }
 }

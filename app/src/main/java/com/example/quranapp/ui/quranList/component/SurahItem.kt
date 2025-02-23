@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.quranapp.R
 import com.example.quranapp.data.model.Surah
-import com.example.quranapp.ui.theme.icon_green
 
 @Composable
 fun SurahItem(
@@ -114,14 +113,8 @@ fun SurahItem(
                     )
                 }
 
-                isDownloaded -> IconButton(
-                    onClick = { /* Handle download button click */ },
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.check_circle),
-                        contentDescription = "Downloaded",
-                        tint = icon_green
-                    )
+                isDownloaded -> {
+                    /* Not Display download icon */
                 }
 
                 else -> IconButton(onClick = { onDownloadClick() }) {

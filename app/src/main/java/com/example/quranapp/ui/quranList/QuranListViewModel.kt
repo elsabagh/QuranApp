@@ -41,36 +41,44 @@ class QuranListViewModel @Inject constructor(
         }
     }
 
-    fun getSurahList() {
+    private fun getSurahList() {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
+            _state.update { it.copy(isLoading = true, error = "") }
 
             quranRepository.getSurahList().collect { resource ->
                 when (resource) {
+                    is Resource.Success -> {
+                        val updatedSurahList = resource.data ?: emptyList()
+                        _state.update {
+                            it.copy(
+                                isLoading = false,
+                                surahList = updatedSurahList,
+                                lastFetchedSurahList = updatedSurahList,
+                                showRetryButton = false
+                            )
+                        }
+                    }
+
                     is Resource.Error -> {
                         _state.update {
                             it.copy(
                                 isLoading = false,
                                 error = resource.message ?: "Unknown error",
-                                showRetryButton = true // Show retry when error occurs
-                            )
-                        }
-                    }
-
-                    is Resource.Success -> resource.data?.let { surahList ->
-                        val updatedSurahList = surahList.map { it.copy(ayahs = it.ayahs ?: emptyList()) }
-                        _state.update {
-                            it.copy(
-                                isLoading = false,
-                                surahList = updatedSurahList,
-                                lastFetchedSurahList = updatedSurahList, // Save last fetched list
-                                showRetryButton = false
+                                showRetryButton = true
                             )
                         }
                     }
 
                     is Resource.Loading -> _state.update { it.copy(isLoading = resource.isLoading) }
                 }
+            }
+        }
+    }
+
+    private fun getDownloadedSurahs() {
+        viewModelScope.launch {
+            quranRepository.getDownloadedSurahs().collect { surahList ->
+                _state.update { it.copy(isLoading = false, surahList = surahList) }
             }
         }
     }
@@ -83,27 +91,18 @@ class QuranListViewModel @Inject constructor(
         }
     }
 
-
-    private fun getDownloadedSurahs() {
-        viewModelScope.launch {
-            quranRepository.getDownloadedSurahs().collect { surahList ->
-                _state.update { it.copy(isLoading = false, surahList = surahList) }
-            }
-        }
-    }
-
     fun downloadSurah(surahNumber: Int) {
         viewModelScope.launch {
+            _state.update { it.copy(downloadingSurahNumber = surahNumber) }
             try {
-                _state.update { it.copy(downloadingSurahNumber = surahNumber) }
                 quranRepository.downloadSurah(surahNumber)
-                checkDownloadedSurahs() // Refresh the list after downloading
-                _state.update { it.copy(downloadingSurahNumber = null) }
+                checkDownloadedSurahs()
                 SnackBarManager.showMessage(R.string.surah_downloaded_successfully)
             } catch (e: Exception) {
                 _state.update { it.copy(error = "Download failed: ${e.message}") }
                 SnackBarManager.showMessage(R.string.download_failed)
-
+            } finally {
+                _state.update { it.copy(downloadingSurahNumber = null) }
             }
         }
     }
