@@ -158,7 +158,7 @@ fun HomeContent(
                 Triple(
                     stringResource(R.string.qiblah),
                     painterResource(id = R.drawable.qiblah),
-                    "qiblahScreen"
+                    AppDestination.QiblaDestination.route
                 )
             ),
             navController = navController

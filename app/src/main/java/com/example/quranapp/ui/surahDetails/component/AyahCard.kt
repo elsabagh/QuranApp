@@ -18,8 +18,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.example.quranapp.ui.surahDetails.SurahDetailsState
 import com.example.quranapp.ui.surahDetails.SurahDetailsViewModel
-import com.example.quranapp.util.estimateAyahsPerPage
-import com.example.quranapp.util.formatAyahs
+import com.example.quranapp.util.formate.estimateAyahsPerPage
+import com.example.quranapp.util.formate.formatAyahs
 
 @Composable
 fun AyahCard(

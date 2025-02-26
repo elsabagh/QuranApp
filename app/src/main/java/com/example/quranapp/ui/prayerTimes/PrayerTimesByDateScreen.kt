@@ -26,7 +26,7 @@ import com.example.quranapp.ui.prayerTimes.component.AddressPicker
 import com.example.quranapp.ui.prayerTimes.component.PrayerNavigationControls
 import com.example.quranapp.ui.prayerTimes.component.PrayerTimesList
 import com.example.quranapp.ui.prayerTimes.component.PrayerTopBar
-import com.example.quranapp.util.FormatDate
+import com.example.quranapp.util.formate.FormatDate
 import com.google.android.gms.location.LocationServices
 
 @Composable

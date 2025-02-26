@@ -1,4 +1,4 @@
-package com.example.quranapp.util
+package com.example.quranapp.util.formate
 
 import androidx.compose.ui.text.AnnotatedString
 import com.example.quranapp.data.model.Ayah

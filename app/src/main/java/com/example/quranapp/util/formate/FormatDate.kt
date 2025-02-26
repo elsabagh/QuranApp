@@ -1,4 +1,4 @@
-package com.example.quranapp.util
+package com.example.quranapp.util.formate
 
 import android.util.Log
 import java.text.SimpleDateFormat

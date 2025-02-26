@@ -25,13 +25,13 @@ class MasbahaViewModel@Inject constructor() : ViewModel() {
 
     fun onTasbihSelected(id: Int) {
         _uiState.update { currentState ->
-            if (currentState.selectedTasbihId != id) {
+            if (currentState.selectedTasbihId != id) {  // ✅ تحقق من عدم تكرار الاختيار
                 currentState.copy(
-                    selectedTasbihId = id,
+                    selectedTasbihId = id, // ✅ تحديث العنصر المحدد
                     counterClick = 0 // ✅ تصفير العداد عند التغيير
                 )
             } else {
-                currentState
+                currentState// ✅ لا تحتاج إلى تحديث الحالة إذا تم اختيار نفس العنصر
             }
         }
     }

@@ -5,7 +5,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quranapp.domain.repository.PrayerTimesRepository
-import com.example.quranapp.util.FormatDate
+import com.example.quranapp.util.formate.FormatDate
 import com.example.quranapp.util.Resource
 import com.example.quranapp.util.checkIfGpsEnabled
 import com.example.quranapp.util.updateLocation

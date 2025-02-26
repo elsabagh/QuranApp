@@ -11,10 +11,12 @@ import com.example.quranapp.ui.home.HomeScreen
 import com.example.quranapp.ui.masbaha.MasbahaScreen
 import com.example.quranapp.ui.navigation.AppDestination.MasbahaDestination
 import com.example.quranapp.ui.navigation.AppDestination.PrayerTimesDestination
+import com.example.quranapp.ui.navigation.AppDestination.QiblaDestination
 import com.example.quranapp.ui.navigation.AppDestination.QuranHomeDestination
 import com.example.quranapp.ui.navigation.AppDestination.QuranPageDestination
 import com.example.quranapp.ui.navigation.AppDestination.SurahDetailsDestination
 import com.example.quranapp.ui.prayerTimes.PrayerTimesByDateScreen
+import com.example.quranapp.ui.qibla.QiblaScreen
 import com.example.quranapp.ui.quranList.QuranListScreen
 import com.example.quranapp.ui.surahDetails.SurahDetailsScreen
 
@@ -65,7 +67,14 @@ fun NavGraph(
                     navController.navigate(QuranHomeDestination.route)
                 }
             )
-
+        }
+        composable(QiblaDestination.route) {
+            QiblaScreen(
+                navController = navController,
+                onBackClick = {
+                    navController.navigate(QuranHomeDestination.route)
+                }
+            )
         }
     }
 }

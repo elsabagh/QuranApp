@@ -1,4 +1,4 @@
-package com.example.quranapp.util
+package com.example.quranapp.util.formate
 
 fun convertToArabicNumerals(number: Int): String {
     val arabicDigits = arrayOf("٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩")

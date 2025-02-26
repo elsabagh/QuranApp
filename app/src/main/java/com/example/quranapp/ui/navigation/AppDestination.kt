@@ -22,4 +22,7 @@ interface AppDestination {
         override val route = "MasbahaScreen"
     }
 
+    object QiblaDestination : AppDestination {
+        override val route = "QiblaScreen"
+    }
 }
