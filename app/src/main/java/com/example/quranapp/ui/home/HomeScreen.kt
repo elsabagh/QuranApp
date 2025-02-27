@@ -11,16 +11,20 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -34,6 +38,7 @@ import androidx.navigation.NavController
 import com.example.quranapp.R
 import com.example.quranapp.data.model.PrayerTimesResponse
 import com.example.quranapp.ui.home.component.ActionRow
+import com.example.quranapp.ui.home.component.AppDrawer
 import com.example.quranapp.ui.home.component.DialogLocation
 import com.example.quranapp.ui.home.component.DuaCard
 import com.example.quranapp.ui.home.component.PrayerTimesCard
@@ -44,15 +49,20 @@ import com.example.quranapp.util.updateLocation
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.launch
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(
+    navController: NavController
+) {
     val viewModel = hiltViewModel<PrayerTimesViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
 
     val locationPermissionLauncher =
         rememberLauncherForActivityResult(RequestPermission()) { granted ->
@@ -75,27 +85,48 @@ fun HomeScreen(navController: NavController) {
         DialogLocation(onDismiss = { viewModel.setGpsDialogVisibility(false) })
     }
 
-    Scaffold(
-        topBar = { HomeTopBar(onMenuClick = {}) }
-    ) { paddingValues ->
-        SwipeRefresh(
-            state = rememberSwipeRefreshState(state.isRefreshing),
-            onRefresh = {
-                viewModel.setRefreshing(true)
-                updateLocation(fusedLocationClient, context) {
-                    viewModel.updateLocation(it)
-                    viewModel.setRefreshing(false)
-                }
-            }
-        ) {
-            HomeContent(
-                state.location, state.prayerTimes,
-                modifier = Modifier.padding(paddingValues),
-                navController = navController
+    ModalNavigationDrawer(
+        drawerContent = {
+            AppDrawer(
+                onItemClick = { navController.navigate(AppDestination.SettingsDestination.route) }
+
             )
+        },
+        drawerState = drawerState
+    ) {
+        Scaffold(
+            topBar = {
+                HomeTopBar(onMenuClick = {
+                    scope.launch {
+                        if (drawerState.isClosed) {
+                            drawerState.open()
+                        } else {
+                            drawerState.close()
+                        }
+                    }
+                })
+            }
+        ) { paddingValues ->
+            SwipeRefresh(
+                state = rememberSwipeRefreshState(state.isRefreshing),
+                onRefresh = {
+                    viewModel.setRefreshing(true)
+                    updateLocation(fusedLocationClient, context) {
+                        viewModel.updateLocation(it)
+                        viewModel.setRefreshing(false)
+                    }
+                }
+            ) {
+                HomeContent(
+                    state.location, state.prayerTimes,
+                    modifier = Modifier.padding(paddingValues),
+                    navController = navController
+                )
+            }
         }
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -104,7 +135,7 @@ fun HomeTopBar(onMenuClick: () -> Unit) {
         title = {
             Text(text = "", style = TypographyCustom.bodyMedium)
         },
-        actions = {
+        navigationIcon = {
             IconButton(onClick = onMenuClick) {
                 Icon(
                     imageVector = Icons.Filled.Menu,
@@ -156,7 +187,7 @@ fun HomeContent(
                     AppDestination.MasbahaDestination.route
                 ),
                 Triple(
-                    stringResource(R.string.qiblah),
+                    stringResource(R.string.qibla),
                     painterResource(id = R.drawable.qiblah),
                     AppDestination.QiblaDestination.route
                 )

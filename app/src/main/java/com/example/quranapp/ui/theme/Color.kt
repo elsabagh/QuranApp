@@ -15,7 +15,10 @@ val icon_green  = Color(0xFF308C70)
 val Text_green = Color(0xFF87D1A4)
 
 val Off_White = Color(0xFFFAF6EB)
-
+val darkGray = Color(0xFF444444)
+val lightGray = Color(0xFFCBCBCB)
+val white = Color(0xFFFFFFFF)
+val black = Color(0xFF000000)
 
 val primaryLight = Color(0xFF6D5E0F)
 val onPrimaryLight = Color(0xFFFFFFFF)

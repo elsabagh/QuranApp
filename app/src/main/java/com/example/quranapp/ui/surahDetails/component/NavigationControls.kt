@@ -14,9 +14,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.quranapp.R
 import com.example.quranapp.ui.surahDetails.SurahDetailsState
 import com.example.quranapp.ui.surahDetails.SurahDetailsViewModel
 
@@ -26,7 +28,8 @@ fun NavigationControls(state: SurahDetailsState, viewModel: SurahDetailsViewMode
         modifier = Modifier
             .fillMaxWidth()
             .height(48.dp)
-            .padding(top = 16.dp).padding(horizontal = 16.dp)
+            .padding(top = 16.dp)
+            .padding(horizontal = 16.dp)
             .border(1.dp, Color.DarkGray, RoundedCornerShape(8.dp)),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -41,7 +44,7 @@ fun NavigationControls(state: SurahDetailsState, viewModel: SurahDetailsViewMode
             shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp),
             modifier = Modifier.weight(1f)
         ) {
-            Text(text = "Next")
+            Text(stringResource(R.string.next))
         }
 
         Text(
@@ -63,7 +66,7 @@ fun NavigationControls(state: SurahDetailsState, viewModel: SurahDetailsViewMode
             shape = RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp),
             modifier = Modifier.weight(1f)
         ) {
-            Text(text = "Previous")
+            Text(stringResource(R.string.previous))
         }
     }
 }

@@ -7,7 +7,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.quranapp.R
 
 @Composable
 fun AddressPicker(
@@ -24,15 +26,19 @@ fun AddressPicker(
         OutlinedTextField(
             value = selectedCity,
             onValueChange = onCitySelected,
-            label = { Text("المدينة") },
-            modifier = Modifier.fillMaxWidth().weight(1f)
+            label = { Text(stringResource(R.string.city)) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
         )
         // اختيار الدولة
         OutlinedTextField(
             value = selectedCountry,
             onValueChange = onCountrySelected,
-            label = { Text("الدولة") },
-            modifier = Modifier.fillMaxWidth().weight(1f)
+            label = { Text(stringResource(R.string.country)) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
         )
     }
 }

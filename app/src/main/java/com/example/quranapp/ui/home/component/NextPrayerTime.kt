@@ -9,7 +9,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.quranapp.R
 import com.example.quranapp.data.model.Timings
 import kotlinx.coroutines.delay
 import java.time.Duration
@@ -34,11 +36,11 @@ fun NextPrayerTime(
     }
 
     val prayerTimesList = listOf(
-        "Fajr" to LocalTime.parse(prayerTimings.Fajr, formatter),
-        "Dhuhr" to LocalTime.parse(prayerTimings.Dhuhr, formatter),
-        "Asr" to LocalTime.parse(prayerTimings.Asr, formatter),
-        "Maghrib" to LocalTime.parse(prayerTimings.Maghrib, formatter),
-        "Isha" to LocalTime.parse(prayerTimings.Isha, formatter)
+        stringResource(R.string.fajr) to LocalTime.parse(prayerTimings.Fajr, formatter),
+        stringResource(R.string.dhuhr) to LocalTime.parse(prayerTimings.Dhuhr, formatter),
+        stringResource(R.string.asr) to LocalTime.parse(prayerTimings.Asr, formatter),
+        stringResource(R.string.maghrib) to LocalTime.parse(prayerTimings.Maghrib, formatter),
+        stringResource(R.string.isha) to LocalTime.parse(prayerTimings.Isha, formatter)
     )
 
     // Find the next and previous prayer

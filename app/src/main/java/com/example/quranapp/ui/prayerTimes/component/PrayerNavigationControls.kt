@@ -13,7 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.quranapp.R
 
 @Composable
 fun PrayerNavigationControls(
@@ -39,7 +41,7 @@ fun PrayerNavigationControls(
             shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp),
             modifier = Modifier.weight(1f)
         ) {
-            Text(text = "Next")
+            Text(text = stringResource(R.string.next))
         }
 
         DatePicker(
@@ -56,7 +58,7 @@ fun PrayerNavigationControls(
             shape = RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp),
             modifier = Modifier.weight(1f)
         ) {
-            Text(text = "Previous")
+            Text(text = stringResource(R.string.previous))
         }
     }
 }

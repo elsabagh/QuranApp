@@ -9,6 +9,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.example.quranapp.R
 
 @Composable
 fun DialogLocation(
@@ -18,8 +20,8 @@ fun DialogLocation(
     val context = LocalContext.current
     AlertDialog(
         onDismissRequest = { onDismiss() },
-        title = { Text("Enable GPS") },
-        text = { Text("This app requires GPS to fetch prayer times. Please enable it.") },
+        title = { Text(stringResource(R.string.enable_gps)) },
+        text = { Text(stringResource(R.string.this_app_requires_gps_to_fetch_prayer_times_please_enable_it)) },
         confirmButton = {
             Button(onClick = {
                 context.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
@@ -30,7 +32,7 @@ fun DialogLocation(
         },
         dismissButton = {
             TextButton(onClick = { onDismiss() }) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel))
             }
         }
     )

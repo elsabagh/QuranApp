@@ -8,6 +8,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.example.quranapp.R
 import com.example.quranapp.ui.theme.TypographyCustom
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -17,7 +19,7 @@ fun PrayerTopBar(
 ) {
     TopAppBar(
         title = {
-            Text(text = "Prayer Times", style = TypographyCustom.bodyMedium)
+            Text(text = stringResource(R.string.prayer_times), style = TypographyCustom.bodyMedium)
         },
         navigationIcon = {
             IconButton(onClick = onBackClick) {

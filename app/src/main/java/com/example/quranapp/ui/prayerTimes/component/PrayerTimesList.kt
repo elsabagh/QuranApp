@@ -12,10 +12,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.quranapp.R
 import com.example.quranapp.data.model.GregorianDate
 import com.example.quranapp.data.model.HijriDate
 import com.example.quranapp.data.model.PrayerDate
@@ -45,11 +47,11 @@ fun PrayerTimesList(prayerTimes: PrayerTimesResponse) {
 
         )
         val timings = prayerTimes.data.timings
-        PrayerTimeItem("الفجر", timings.Fajr)
-        PrayerTimeItem("الظهر", timings.Dhuhr)
-        PrayerTimeItem("العصر", timings.Asr)
-        PrayerTimeItem("المغرب", timings.Maghrib)
-        PrayerTimeItem("العشاء", timings.Isha)
+        PrayerTimeItem(stringResource(R.string.fajr), timings.Fajr)
+        PrayerTimeItem(stringResource(R.string.dhuhr), timings.Dhuhr)
+        PrayerTimeItem(stringResource(R.string.asr), timings.Asr)
+        PrayerTimeItem(stringResource(R.string.maghrib), timings.Maghrib)
+        PrayerTimeItem(stringResource(R.string.isha), timings.Isha)
     }
 }
 

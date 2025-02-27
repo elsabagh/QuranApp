@@ -10,14 +10,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
 @Composable
@@ -42,10 +45,12 @@ fun ActionCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                modifier = Modifier.size(32.dp),
-                painter = icon, contentDescription = label)
+                modifier = Modifier.size(24.dp),
+                painter = icon, contentDescription = label,
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
+            )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(text = label, textAlign = TextAlign.Center)
+            Text(text = label, textAlign = TextAlign.Center, fontSize = 16.sp)
         }
     }
 }

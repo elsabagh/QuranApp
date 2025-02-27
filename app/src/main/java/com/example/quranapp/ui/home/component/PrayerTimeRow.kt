@@ -13,7 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.quranapp.R
 import com.example.quranapp.data.model.Timings
 
 @Composable
@@ -43,11 +45,11 @@ fun PrayerTimesGrid(timings: Timings) {
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         listOf(
-            "Fajr" to timings.Fajr,
-            "Dhuhr" to timings.Dhuhr,
-            "Asr" to timings.Asr,
-            "Maghrib" to timings.Maghrib,
-            "Isha" to timings.Isha
+            stringResource(R.string.fajr) to timings.Fajr,
+            stringResource(R.string.dhuhr) to timings.Dhuhr,
+            stringResource(R.string.asr) to timings.Asr,
+            stringResource(R.string.maghrib) to timings.Maghrib,
+            stringResource(R.string.isha) to timings.Isha
         ).forEach { (name, time) ->
             PrayerTimeRow(name, time, Icons.Filled.WbSunny)
         }
