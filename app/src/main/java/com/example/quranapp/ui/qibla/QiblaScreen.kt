@@ -21,7 +21,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
@@ -36,6 +38,9 @@ import com.example.quranapp.R
 import com.example.quranapp.ui.qibla.component.QiblaCompassCanvas
 import com.example.quranapp.ui.qibla.component.QiblaDirectionIndicator
 import com.example.quranapp.ui.qibla.component.QiblaDirectionText
+import com.example.quranapp.ui.qibla.component.QiblaWarningDialog
+import com.example.quranapp.util.NetworkUtils
+import com.example.quranapp.util.checkIfGpsEnabled
 import com.example.quranapp.util.formate.drawableToBitmap
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -50,13 +55,22 @@ fun QiblaScreen(
     val shouldVibrate by viewModel.shouldVibrate.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
+    var showDialog by remember { mutableStateOf(false) }
+
     val compassBgBitmap =
         remember { drawableToBitmap(context, R.drawable.compass_img).asImageBitmap() }
     val qiblaIconBitmap =
         remember { drawableToBitmap(context, R.drawable.qiblaiconpoint).asImageBitmap() }
 
+    // ✅ تحقق من الإنترنت و GPS عند فتح الشاشة
     LaunchedEffect(Unit) {
-        viewModel.startListening()
+        val isGpsEnabled = checkIfGpsEnabled(context)
+        val isNetworkAvailable = NetworkUtils.isNetworkAvailable(context)
+        showDialog = !(isGpsEnabled && isNetworkAvailable)
+
+        if (!showDialog) {
+            viewModel.startListening()
+        }
     }
 
     DisposableEffect(Unit) {
@@ -65,14 +79,25 @@ fun QiblaScreen(
         }
     }
 
+    // ✅ عرض التحذير إذا كان الإنترنت أو GPS مغلقين
+    QiblaWarningDialog(
+        showDialog = showDialog,
+        onDismiss = { showDialog = false },
+        onRetry = {
+            val isGpsEnabled = checkIfGpsEnabled(context)
+            val isNetworkAvailable = NetworkUtils.isNetworkAvailable(context)
+
+            if (isGpsEnabled && isNetworkAvailable) {
+                showDialog = false
+                viewModel.startListening() // إعادة تشغيل الاستماع لاتجاه القبلة
+            }
+        }
+    )
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.qibla)
-                    )
-                },
+                title = { Text(text = stringResource(R.string.qibla)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back")

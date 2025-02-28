@@ -32,7 +32,6 @@ class LocationManager @Inject constructor(
      * - **تستخدم `PRIORITY_HIGH_ACCURACY` للحصول على دقة عالية**
      */
     fun getLastKnownLocation() {
-        // التأكد من أن التطبيق لديه إذن الوصول إلى الموقع
         if (ActivityCompat.checkSelfPermission(
                 context, Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
@@ -40,15 +39,17 @@ class LocationManager @Inject constructor(
             return
         }
 
-        // طلب الموقع باستخدام الدقة العالية
-        fusedLocationClient.getCurrentLocation(
-            Priority.PRIORITY_HIGH_ACCURACY, // استخدام أعلى دقة ممكنة
-            null // لا نحتاج إلى كاش الموقع
-        ).addOnSuccessListener { location ->
-            // إذا تم العثور على موقع، استدعاء الدالة المخصصة لذلك
-            location?.let {
-                onLocationReceived?.invoke(it)
+        fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+            .addOnSuccessListener { location ->
+                if (location != null) {
+                    onLocationReceived?.invoke(location)
+                } else {
+                    // استخدم آخر موقع معروف في حالة عدم وجود إنترنت
+                    fusedLocationClient.lastLocation
+                        .addOnSuccessListener { lastKnownLocation ->
+                            lastKnownLocation?.let { onLocationReceived?.invoke(it) }
+                        }
+                }
             }
-        }
     }
 }
